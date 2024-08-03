@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+html {
+    width: auto;
+    height: auto;
+}
+
+* {
+    color: #023e8a;
+    font-family: 'Roboto', sans-serif;
+}
+
+.div-blue {
+
+    height: 15vh;
+    background-image: linear-gradient(to bottom, #48cae4, #90e0ef);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.khomeini {
+    max-width: 100%;
+    height: auto;
+    max-height: 77%;
+    padding-top: 1vh;
+    order: 3;
+}
+
+.agha {
+    max-width: 100%;
+    height: auto;
+    max-height: 77%;
+    padding-top: 1vh;
+    order: 1;
+}
+
+.masjed_logo {
+    max-width: 100%;
+    height: auto;
+    max-height: 60%;
+    padding-top: 2vh;
+    order: 2;
+}
+
+.logo_h {
+    max-width: 100%;
+    height: auto;
+    max-height: 85%;
+    padding-top: 2vh;
+    order: 2;
+}
+
+
+.table-container {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    border: #888888;
+    border-style: solid;
+}
+
+.table-container th,
+.table-container td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+.table-container th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.table-container tr:hover {
+    background-color: #42a5f5;
+}
+
+.table-container tr:nth-child(even) {
+    background-color: #e3f2fd;
+}
+
+.table-container tr:nth-child(even):hover {
+    background-color: #42a5f5;
+}
+
+.form_register {
+    width: 600px;
+    height: auto;
+    margin: auto;
+    border: 2px dashed darkgrey;
+    border-radius: 3%;
+    background-image: linear-gradient(to bottom, #48cae4, #90e0ef);
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.form_kadr {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    /*margin: auto;*/
+    margin-right: 84px;
+    box-sizing: border-box;
+}
+
+label {
+    margin-left: auto;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+    color: #023e8a;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 17px;
+    margin-top: 2px;
+    color: #03045e;
+}
+
+
+input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 17px;
+    margin-top: 2px;
+    color: #03045e;
+}
+
+input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 17px;
+    margin-top: 2px;
+    color: #03045e;
+}
+
+button[type="submit"] {
+    border: 2px solid #023e8a;
+    background-color: white;
+    color: #0096c7;
+    width: 80px;
+    height: 40px;
+    text-decoration: none;
+    padding: 4px 8px;
+    box-sizing: border-box;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+button[type="submit"]:hover {
+    background-color: #023e8a;
+    color: #ffffff;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.checkbox-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.checkbox-list label {
+    flex-basis: 25%; /* تقسیم به 4 ستون مساوی */
+}
+
+.alarm {
+    width: 100px;
+    height: 100px;
+    background-color: #888888;
+    margin-top: 60px;
+    margin-right: 10px;
+}
+
+.serceh_list {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* وسط چین کردن افقی */
+    justify-content: center; /* وسط چین کردن عمودی */
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.serceh_list form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.serceh_list label {
+    margin-right: 10px;
+}
+
+.serceh_list input,
+.serceh_list select {
+    padding: 5px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form_login {
+    width: 250px;
+    height: auto;
+    margin: auto;
+    border: 2px dashed darkgrey;
+    border-radius: 3%;
+    background-image: linear-gradient(to bottom, #CAF0F8, #48CAE4);
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.eroor {
+    width: 200px;
+    height: auto;
+    margin: auto;
+    color: red;
+    padding-right: 10px;
+}
+
+.btn-success {
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid #3e8f3e;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-sub-search {
+    padding-right: 5px;
+/ important;
+    padding-bottom: 10px;
+}
+
+.btn-test {
+    transition: all 1s;
+
+}
+
+.btn-test:link, .btn-test:visited {
+    border: 2px solid #023e8a;
+    background-color: white;
+    color: #0096c7;
+    text-decoration: none;
+    padding: 4px 8px;
+    box-sizing: border-box;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.btn-test:hover, .btn-test:active {
+    background-color: #023e8a;
+    color: #ffffff;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/*div{*/
+/*    display: inline;*/
+/*}*/
+a, button {
+    transition: all 1s;
+}
+
+.btn_top {
+    width: 40px;
+    height: 40px;
+    background-color: #48CAE4;
+    text-align: center;
+    line-height: 25px;
+    color: white;
+    border-radius: 15px;
+    position: fixed;
+    right: 20px;
+    bottom: 7px;
+}
+
+.btn_top img {
+    width: 25px;
+    height: 25px;
+    padding: 3px;
+    text-align: center;
+    margin-top: 5px;
+}

@@ -1,0 +1,282 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+html {
+    width: auto;
+    height: auto;
+}
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.div-blue {
+
+    height: 15vh;
+    background-image: linear-gradient(to bottom, #CAF0F8, #48CAE4);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.khomeini {
+    max-width: 100%;
+    height: auto;
+    max-height: 77%;
+    padding-top: 1vh;
+    order: 3;
+}
+
+.agha {
+    max-width: 100%;
+    height: auto;
+    max-height: 77%;
+    padding-top: 1vh;
+    order: 1;
+}
+
+.masjed_logo {
+    max-width: 100%;
+    height: auto;
+    max-height: 60%;
+    padding-top: 2vh;
+    order: 2;
+}
+
+.logo_h {
+    max-width: 100%;
+    height: auto;
+    max-height: 85%;
+    padding-top: 2vh;
+    order: 2;
+}
+
+.table-container-wrapper {
+    height: calc(100vh - 15vh); /* ارتفاع کل صفحه منهای ارتفاع کادر ابی */
+    overflow-y: auto; /* افزودن اسکرول عمودی */
+}
+
+.table-container {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    border: #888888;
+    border-style: solid;
+    table-layout: fixed; /* تعیین ارتفاع ثابت برای جدول */
+}
+
+.table-container th,
+.table-container td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+.table-container th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.form_register {
+    width: 600px;
+    height: auto;
+    margin: auto;
+    border: 2px dashed darkgrey;
+    border-radius: 3%;
+    background-image: linear-gradient(to bottom, #CAF0F8, #48CAE4);
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.form_kadr {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    /*margin: auto;*/
+    margin-right: 84px;
+    box-sizing: border-box;
+}
+
+label {
+    margin-left: auto;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 17px;
+    margin-top: 2px;
+}
+
+input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.checkbox-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.checkbox-list label {
+    flex-basis: 25%; /* تقسیم به 4 ستون مساوی */
+}
+
+.alarm {
+    width: 100px;
+    height: 100px;
+    background-color: #888888;
+    margin-top: 60px;
+    margin-right: 10px;
+}
+
+.serceh_list {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* وسط چین کردن افقی */
+    justify-content: center; /* وسط چین کردن عمودی */
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.serceh_list form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.serceh_list label {
+    margin-right: 10px;
+}
+
+.serceh_list input,
+.serceh_list select {
+    padding: 5px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.serceh_list button[type="submit"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.serceh_list button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.custom-button {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: linear-gradient(to bottom, #337ab7 0, #265a88 100%);
+    border: 1px solid #1e4965;
+    border-radius: 4px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.custom-button:hover,
+.custom-button:focus {
+    background-image: linear-gradient(to bottom, #286090 0, #1c4b68 100%);
+    color: #fff;
+    text-decoration: none;
+}
+
+.form_login {
+    width: 250px;
+    height: auto;
+    margin: auto;
+    border: 2px dashed darkgrey;
+    border-radius: 3%;
+    background-image: linear-gradient(to bottom, #CAF0F8, #48CAE4);
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.eroor {
+    width: 200px;
+    height: auto;
+    margin: auto;
+    color: red;
+    padding-right: 10px;
+}
+
+.btn-success {
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid #3e8f3e;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-sub-search {
+    padding-right: 5px;
+!important;
+    padding-bottom: 10px;
+}

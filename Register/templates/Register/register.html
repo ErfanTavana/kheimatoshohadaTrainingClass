@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <title>ثبت نام</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-date/dist/persian-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker/dist/js/persian-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker/dist/css/persian-datepicker.min.css"/>
+    <script>
+        function redirectToPage(url) {
+            window.location.href = url;
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#birth_date").persianDatepicker({
+                format: "YYYY/MM/DD",
+                altField: ".dateAlt",
+                altFormat: "YYYY/MM/DD",
+                observer: true,
+                calendarType: "persian",
+                toolbox: {
+                    calendarSwitch: {
+                        enabled: false
+                    }
+                }
+            });
+            $("#registration-form").submit(function (event) {
+                event.preventDefault();
+                // ارسال فرم با استفاده از AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'register_class_name' %}",
+                    data: $(this).serialize(),
+                    success: function () {
+                        // نمایش الارم ذخیره شد
+                        // نمایش نام و نام خانوادگی در الرت
+                        var name = $("#name").val();
+                        var lastName = $("#last_name").val();
+                        alert("نام: " + name + "\nنام خانوادگی: " + lastName);
+                        // پاک کردن فرم
+                        $("#registration-form")[0].reset();
+                        // رفرش کردن صفحه
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <link rel="stylesheet" href="{% static "css/main.css" %}">
+    <style>
+        .form_register label {
+            display: inline-block;
+            width: 100px;
+            margin-bottom: 5px;
+        }
+
+        .form_register input[type="text"] {
+            width: 200px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="div-blue">
+        <!-- کادر ابی بالا -->
+        <img class="khomeini" src="{% static 'img/emam2.png' %}">
+        <img class="agha" src="{% static 'img/agha1.png' %}">
+        <img class="logo_h" src="{% static 'img/logo_h.png' %}" onclick="redirectToPage('{% url 'register_class_name' %}')">
+        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}"
+             onclick="redirectToPage('{% url 'register_class_name' %}')">
+    </div>
+</header>
+<br>
+<br>
+
+<div class="form_register">
+    <div class="form_kadr">
+        <form id="registration-form" method="post">
+            {% csrf_token %}
+
+                <label for="name">نام : </label>
+                <input autocomplete="off" id="name" type="text" name="first_name"><br>
+                <label for="last_name">نام خانوادگی : </label>
+                <input autocomplete="off" id="last_name"  type="text" name="last_name"><br>
+                <label for="father_name">نام پدر : </label>
+                <input autocomplete="off" id="father_name" type="text" name="father_name"><br>
+                <label for="national_code">کد ملی : </label>
+                <input autocomplete="off" id="national_code" type="text" name="national_code"><br>
+                <label for="birth_date">تاریخ تولد : </label>
+                <input autocomplete="off" type="text" class="form-control" name="birth_date" id="birth_date"><br>
+                <label for="payment_amount">پرداخت شده : </label>
+                <input autocomplete="off" id="payment_amount" type="text" name="payment_amount"><br>
+                <label for="phone_number">تلفن تماس : </label>
+                <input autocomplete="off" id="phone_number" type="text" name="contact_number"><br>
+
+            <hr>
+            <div id="class_list" class="checkbox-list">
+                {% for class in classes %}
+                    <label><input type="checkbox" name="classes" value="{{ class.id }}">{{ class.class_name }}</label><br>
+                {% endfor %}
+            </div>
+            <br>
+            <button style="margin-right: 165px" class="btn-test" type="submit">ثبت نام</button>
+
+        </form>
+    </div>
+</div>
+</body>
+</html>
