@@ -14,7 +14,6 @@
             window.location.href = url;
         }
     </script>
-
     <script>
         $(document).ready(function () {
             $("#birth_date").persianDatepicker({
@@ -38,21 +37,20 @@
                     data: $(this).serialize(),
                     success: function () {
                         // نمایش الارم ذخیره شد
-                        // نمایش نام و نام خانوادگی در الرت
                         var name = $("#name").val();
                         var lastName = $("#last_name").val();
                         alert("نام: " + name + "\nنام خانوادگی: " + lastName);
                         // پاک کردن فرم
                         $("#registration-form")[0].reset();
-                        // رفرش کردن صفحه
-                        location.reload();
+                        // انتقال به صفحه اپدیت
+                        window.location.href = "/update/{{ user.id }}";  // جایگزین کردن user.id با شناسه کاربر مورد نظر
                     }
                 });
             });
+
         });
     </script>
-
-    <link rel="stylesheet" href="{% static "css/main.css" %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <style>
         .form_register label {
             display: inline-block;
@@ -84,7 +82,10 @@
     <div class="form_kadr">
         <form id="registration-form" method="post">
             {% csrf_token %}
-
+            <!-- نمایش پیام خطا -->
+            {% if error %}
+                <div class="error-message" id="error-message">{{ error }}</div>
+            {% endif %}
                 <label for="name">نام : </label>
                 <input autocomplete="off" id="name" type="text" name="first_name"><br>
                 <label for="last_name">نام خانوادگی : </label>
@@ -94,11 +95,12 @@
                 <label for="national_code">کد ملی : </label>
                 <input autocomplete="off" id="national_code" type="text" name="national_code"><br>
                 <label for="birth_date">تاریخ تولد : </label>
-                <input autocomplete="off" type="text" class="form-control" name="birth_date" id="birth_date"><br>
+            <input autocomplete="off" type="text" class="form-control" name="birthdate"
+                   id="birth_date"><br>
                 <label for="payment_amount">پرداخت شده : </label>
                 <input autocomplete="off" id="payment_amount" type="text" name="payment_amount"><br>
-                <label for="phone_number">تلفن تماس : </label>
-                <input autocomplete="off" id="phone_number" type="text" name="contact_number"><br>
+            <label for="contact_number">تلفن تماس : </label>
+            <input autocomplete="off" id="contact_number" type="text" name="contact_number"><br>
 
             <hr>
             <div id="class_list" class="checkbox-list">

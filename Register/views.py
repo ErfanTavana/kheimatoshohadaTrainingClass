@@ -1,15 +1,9 @@
-from dateutil.relativedelta import relativedelta
-from datetime import datetime
-from django.shortcuts import render, redirect
-from persiantools.jdatetime import JalaliDate
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-from .models import Student,Class
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import Student, Class
-from django.utils.dateparse import parse_date
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
+
+from .models import Student
+from .models import User, Class
+
 
 def register_class(request):
     if not  request.user.is_authenticated:
@@ -23,19 +17,20 @@ def register_class(request):
         last_name = request.POST.get('last_name')
         father_name = request.POST.get('father_name')
         national_code = request.POST.get('national_code')
-        birth_date = request.POST.get('birth_date')
+        # birth_date = request.POST.get('birth_date')
+        birth_date = '2024-08-03'
+
         payment_amount = request.POST.get('payment_amount')
         contact_number = request.POST.get('contact_number')
 
         # گرفتن کلاس‌های انتخاب شده
         class_ids = request.POST.getlist('classes')
+        classes = Class.objects.all()
 
         # اعتبارسنجی داده‌ها (اختیاری)
         if not first_name or not last_name or not national_code or not birth_date:
-            messages.error(request, "لطفاً همه فیلدهای ضروری را پر کنید.")
-            classes = Class.objects.all()
-            return render(request, 'Register/register.html', {'classes': classes})
-
+            return render(request, 'Register/register.html',
+                          context={'classes': classes, 'error': 'لطفا فیلد های ضروری را تکمیل کنید'})
         try:
             # ایجاد یک دانش‌آموز جدید
             student = Student.objects.create(
@@ -44,6 +39,7 @@ def register_class(request):
                 last_name=last_name,
                 father_name=father_name,
                 national_code=national_code,
+                birth_date='2024-08-03',
                 payment_amount=payment_amount,
                 contact_number=contact_number
             )
@@ -52,15 +48,49 @@ def register_class(request):
             classes = Class.objects.filter(id__in=class_ids)
             student.classes.set(classes)
 
-            messages.success(request, "ثبت‌نام با موفقیت انجام شد.")
-            return redirect('success')  # تغییر به صفحه موفقیت یا لیست کلاس‌ها
+            return redirect('update_name', student_id=student.id)
         except ValueError as e:
-            messages.error(request, str(e))
+            return render(request, 'Register/register.html',
+                          context={'classes': classes, 'error': f'{str(e)}'})
         except Exception as e:
-            print(e)
-            messages.error(request, "خطا در ثبت‌نام. لطفاً دوباره تلاش کنید.")
+            return render(request, 'Register/register.html',
+                          context={'classes': classes, 'error': 'خطا در ثبت نام لطفا دوباره تلاش کنید'})
 
 
+def update_view(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        user.name = request.POST.get('name')
+        user.last_name = request.POST.get('last_name')
+        user.father_name = request.POST.get('father_name')
+        user.national_code = request.POST.get('national_code')
+        user.birthdate = request.POST.get('birthdate')
+        user.payment_amount = request.POST.get('payment_amount')
+        user.phone_number = request.POST.get('phone_number')
+        user.Urdu = 'Urdu' in request.POST
+        user.consent_letter = 'consent_letter' in request.POST
+        user.photoshop = 'photoshop' in request.POST
+        user.python = 'python' in request.POST
+        user.futsal = 'futsal' in request.POST
+        user.swim = 'swim' in request.POST
+        user.self_defense = 'self_defense' in request.POST
+        user.shooting = 'shooting' in request.POST
+        user.relief_and_rescue = 'relief_and_rescue' in request.POST
+        user.biology = 'biology' in request.POST
+        user.photography = 'photography' in request.POST
+        user.military_tactics = 'military_tactics' in request.POST
+        user.rhetorical = 'rhetorical' in request.POST
+        user.robotic = 'robotic' in request.POST
+        user.math = 'math' in request.POST
+        user.quran = 'quran' in request.POST
+        user.english = 'english' in request.POST
+        user.arabic = 'arabic' in request.POST
+        user.save()
+
+        return JsonResponse({'message': 'اطلاعات با موفقیت به‌روزرسانی شد'})
+
+    classes = Class.objects.all()
+    return render(request, 'Register/update.html', {'user': user, 'classes': classes})
 #
 #
 # def list_basiji(request):
