@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" style="">
+<head>
+    <meta charset="utf-8">
+    <title>ورود</title>
+    <script>
+        function redirectToPage(url) {
+            window.location.href = url;
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#birth_date").persianDatepicker({
+                format: "YYYY/MM/DD",
+                altField: ".dateAlt",
+                altFormat: "YYYY/MM/DD",
+                observer: true,
+                calendarType: "persian",
+                toolbox: {
+                    calendarSwitch: {
+                        enabled: false
+                    }
+                }
+            });
+
+            $("#registration-form").submit(function (event) {
+                event.preventDefault();
+                // ارسال فرم با استفاده از AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'register_class_name' %}",
+                    data: $(this).serialize(),
+                    success: function () {
+                        // نمایش الارم ذخیره شد
+                        // نمایش نام و نام خانوادگی در الرت
+                        var name = $("#name").val();
+                        var lastName = $("#last_name").val();
+                        alert("نام: " + name + "\nنام خانوادگی: " + lastName);
+                        // پاک کردن فرم
+                        $("#registration-form")[0].reset();
+                        // رفرش کردن صفحه
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-date/dist/persian-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker/dist/js/persian-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker/dist/css/persian-datepicker.min.css"/>
+    <link rel="stylesheet" href="{% static "css/main.css" %}">
+</head>
+<body>
+<header>
+    <div class="div-blue">
+        <!-- کادر ابی بالا -->
+        <img class="khomeini" src="{% static 'img/emam2.png' %}">
+        <img class="agha" src="{% static 'img/agha1.png' %}" >
+        <img class="logo_h" src="{% static 'img/logo_h.png' %}" onclick="redirectToPage('{% url 'register_class_name' %}')">
+        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}"
+             onclick="redirectToPage('{% url 'register_class_name' %}')">
+    </div>
+</header>
+<br>
+<br>
+<div class="form_login">
+    <div class="eroor"><p>{{ eroor }}</p></div>
+    <div class="log">
+        <form class="log" id="registration-form" method="post">
+            {% csrf_token %}
+            <label for="username">نام کاربری: </label>
+            <input style="text-align: center; direction: ltr" id="username" autocomplete="off" type="text"
+                   name="username">
+            <br>
+            <label for="password">رمز عبور: </label>
+            <br>
+            <input style="text-align: center; direction: ltr" id="password" autocomplete="off" type="password"
+                   name="password">
+            <br>
+            <hr>
+            <button style="margin-right: 78px" type="submit">ورود</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

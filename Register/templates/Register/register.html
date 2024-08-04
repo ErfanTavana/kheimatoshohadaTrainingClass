@@ -55,7 +55,8 @@
         <!-- کادر ابی بالا -->
         <img class="khomeini" src="{% static 'img/emam2.png' %}">
         <img class="agha" src="{% static 'img/agha1.png' %}">
-        <img class="logo_h" src="{% static 'img/logo_h.png' %}" onclick="redirectToPage('{% url 'register_class_name' %}')">
+        <img class="logo_h" src="{% static 'img/logo_h.png' %}"
+             onclick="redirectToPage('{% url 'register_class_name' %}')">
         <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}"
              onclick="redirectToPage('{% url 'register_class_name' %}')">
     </div>
@@ -74,7 +75,7 @@
             <label for="name">نام : </label>
             <input autocomplete="off" id="name" type="text" name="first_name"><br>
             <label for="last_name">نام خانوادگی : </label>
-            <input autocomplete="off" id="last_name"  type="text" name="last_name"><br>
+            <input autocomplete="off" id="last_name" type="text" name="last_name"><br>
             <label for="father_name">نام پدر : </label>
             <input autocomplete="off" id="father_name" type="text" name="father_name"><br>
             <label for="national_code">کد ملی : </label>
@@ -87,9 +88,12 @@
             <input autocomplete="off" id="contact_number" type="text" name="contact_number"><br>
 
             <hr>
-            <div id="class_list" class="checkbox-list">
+            <div id="class_list" class="checkbox-list" style="display: flex;justify-content:space-between ;">
                 {% for class in classes %}
-                    <label><input type="checkbox" name="classes" value="{{ class.id }}">{{ class.class_name }}</label><br>
+                    <label style="display: flex; justify-content: flex-start; gap: 0.25rem"><input type="checkbox"
+                                                                                                   name="classes"
+                                                                                                   value="{{ class.id }}">{{ class.class_name }}
+                    </label><br>
                 {% endfor %}
             </div>
             <br>

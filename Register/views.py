@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Student
 from .models import User, Class
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.contrib.auth import authenticate, login
 import jdatetime
 
 
@@ -266,22 +266,22 @@ def update_view(request, student_id):
 #         return redirect("login")
 #
 #
-# def user_login(request):
-#     if request.user.is_authenticated == True:
-#         return redirect("register")
-#     if request.method == "POST":
-#         username = request.POST.get("username")
-#         password = request.POST.get("password")
-#         user = authenticate(request, username=f"{username}", password=f"{password}")
-#         if user is not None:
-#             login(request, user)
-#             return redirect('register')
-#         else:
-#             return render(request, "basiji/login.html", context={"eroor": 'نام كاربري يا رمز عبور اشتباه است'})
-#     # f = RegisterForSummerClasses.objects.all()
-#     # for i in f :
-#     #     print(i.national_code)
-#     #     i.quran = True
-#     #     i.quran = False
-#     #     i.save()
-#     return render(request, "basiji/login.html")
+def user_login(request):
+    if request.user.is_authenticated == True:
+        return redirect("register_class_name")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=f"{username}", password=f"{password}")
+        if user is not None:
+            login(request, user)
+            return redirect('register_class_name')
+        else:
+            return render(request, "Register/login.html", context={"eroor": 'نام كاربري يا رمز عبور اشتباه است'})
+    # f = RegisterForSummerClasses.objects.all()
+    # for i in f :
+    #     print(i.national_code)
+    #     i.quran = True
+    #     i.quran = False
+    #     i.save()
+    return render(request, "Register/login.html")
