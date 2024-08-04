@@ -4,16 +4,17 @@
 <head>
     <meta charset="utf-8">
     <title>ویرایش</title>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/persian-date/dist/persian-date.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/persian-datepicker/dist/js/persian-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker/dist/css/persian-datepicker.min.css"/>
+
     <script>
         function redirectToPage(url) {
             window.location.href = url;
         }
-    </script>
-    <script>
+
         $(document).ready(function () {
             $("#birth_date").persianDatepicker({
                 format: "YYYY/MM/DD",
@@ -42,6 +43,11 @@
             width: 200px;
             margin-bottom: 5px;
         }
+
+        .amount-text {
+            color: green;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -50,8 +56,10 @@
         <!-- کادر آبی بالا -->
         <img class="khomeini" src="{% static 'img/emam2.png' %}">
         <img class="agha" src="{% static 'img/agha1.png' %}">
-        <img class="logo_h" src="{% static 'img/logo_h.png' %}" onclick="redirectToPage('{% url 'register_class_name' %}')">
-        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}" onclick="redirectToPage('{% url 'register_class_name' %}')">
+        <img class="logo_h" src="{% static 'img/logo_h.png' %}"
+             onclick="redirectToPage('{% url 'register_class_name' %}')">
+        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}"
+             onclick="redirectToPage('{% url 'register_class_name' %}')">
     </div>
 </header>
 <br><br>
@@ -62,25 +70,50 @@
             {% csrf_token %}
 
             <label for="first_name">نام : </label>
-            <input autocomplete="off" id="first_name" type="text" value="{{ student.first_name }}" name="first_name"><br>
+            <input autocomplete="off" id="first_name" type="text" value="{{ student.first_name }}"
+                   name="first_name"><br>
             <label for="last_name">نام خانوادگی : </label>
             <input autocomplete="off" id="last_name" type="text" value="{{ student.last_name }}" name="last_name"><br>
             <label for="father_name">نام پدر : </label>
             <input autocomplete="off" id="father_name" type="text" value="{{ student.father_name }}" name="father_name"><br>
             <label for="national_code">کد ملی : </label>
-            <input autocomplete="off" id="national_code" type="text" value="{{ student.national_code }}" name="national_code"><br>
+            <input autocomplete="off" id="national_code" type="text" value="{{ student.national_code }}"
+                   name="national_code"><br>
             <label for="birth_date">تاریخ تولد : </label>
-            <input autocomplete="off" type="text" class="form-control" value="{{ student.birth_date }}" name="birth_date" id="birth_date"><br>
+            <input autocomplete="off" type="text" class="form-control" value="{{ student.birth_date }}"
+                   name="birth_date" id="birth_date"><br>
             <label for="payment_amount">پرداخت شده : </label>
-            <input autocomplete="off" id="payment_amount" type="text" value="{{ student.payment_amount }}" name="payment_amount"><br>
+            <input autocomplete="off" id="payment_amount" type="text" value="{{ student.payment_amount }}"
+                   name="payment_amount"><br>
             <label for="contact_number">تلفن تماس : </label>
-            <input autocomplete="off" id="contact_number" type="text" value="{{ student.contact_number }}" name="contact_number"><br>
+            <input autocomplete="off" id="contact_number" type="text" value="{{ student.contact_number }}"
+                   name="contact_number"><br>
             <hr>
-            <div id="class_list" class="checkbox-list">
+            <div id="class_list" class="checkbox-list" style="display: flex;justify-content:space-between ;">
                 {% for class in classes %}
-                    <label><input type="checkbox" name="classes" value="{{ class.id }}" {% if class.id in student_classes %}checked{% endif %}>{{ class.class_name }}</label><br>
+                    <label style="display: flex; justify-content: flex-start; gap: 0.25rem"><input type="checkbox"
+                                                                                                   name="classes"
+                                                                                                   value="{{ class.id }}"
+                                                                                                   {% if class.id in student_classes %}checked{% endif %}>{{ class.class_name }}
+                    </label><br>
                 {% endfor %}
             </div>
+            <br>
+            {% if remaining_amount < 0 %}
+                <div style="display: flex;">
+                    <label style="width: auto;">باید به دانش‌آموز بازگردانید:</label>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 0.25rem;">
+                        <span>{{ remaining_amount }} تومان</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="display: flex;">
+                    <label style="width: auto;">مبلغ باقی‌مانده قابل پرداخت:</label>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 0.25rem;">
+                        <span>{{ remaining_amount }}</span> تومان
+                    </div>
+                </div>
+            {% endif %}
             <br>
             <button style="margin-right: 165px" class="btn-test" type="submit">ویرایش</button>
         </form>

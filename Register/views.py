@@ -5,6 +5,15 @@ from .models import Student
 from .models import User, Class
 from django.shortcuts import render, get_object_or_404, redirect
 
+import jdatetime
+
+
+def jalali_to_gregorian(jalali_date_str):
+
+    year, month, day = map(int, jalali_date_str.split('/'))
+    jalali_date = jdatetime.date(year, month, day)
+    gregorian_date = jalali_date.togregorian()
+    return gregorian_date.strftime('%Y-%m-%d')
 
 def register_class(request):
     if not request.user.is_authenticated:
@@ -18,8 +27,8 @@ def register_class(request):
         last_name = request.POST.get('last_name')
         father_name = request.POST.get('father_name')
         national_code = request.POST.get('national_code')
-        # birth_date = request.POST.get('birth_date')
-        birth_date = '2024-08-03'
+        birth_date = request.POST.get('birth_date')
+        birth_date = jalali_to_gregorian(birth_date)
 
         payment_amount = request.POST.get('payment_amount')
         contact_number = request.POST.get('contact_number')
@@ -40,7 +49,7 @@ def register_class(request):
                 last_name=last_name,
                 father_name=father_name,
                 national_code=national_code,
-                birth_date='2024-08-03',
+                birth_date=birth_date,
                 payment_amount=payment_amount,
                 contact_number=contact_number
             )
@@ -61,6 +70,7 @@ def register_class(request):
 
 def update_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
+
     if request.method == 'POST':
         student.first_name = request.POST.get('first_name')
         student.last_name = request.POST.get('last_name')
@@ -68,11 +78,12 @@ def update_view(request, student_id):
         student.national_code = request.POST.get('national_code')
 
         # Convert birth_date to YYYY-MM-DD format
-        birth_date_str = request.POST.get('birth_date')
-        birth_date = '2024-08-03'
+        birth_date = request.POST.get('birth_date')
+        birth_date = jalali_to_gregorian(birth_date)
+
         student.birth_date = birth_date
 
-        student.payment_amount = request.POST.get('payment_amount')
+        student.payment_amount = int(request.POST.get('payment_amount') or 0)
         student.contact_number = request.POST.get('contact_number')
 
         class_ids = request.POST.getlist('classes')
@@ -83,8 +94,23 @@ def update_view(request, student_id):
 
     classes = Class.objects.all()
     student_classes = student.classes.values_list('id', flat=True)
-    return render(request, 'Register/update.html',
-                  {'student': student, 'classes': classes, 'student_classes': student_classes})
+
+    # Calculate the total cost of the selected classes
+    total_class_cost = sum(class_obj.class_cost for class_obj in student.classes.all())
+
+    # Calculate the remaining amount to be paid
+    remaining_amount = total_class_cost - student.payment_amount
+
+    # Prepare context for rendering
+    context = {
+        'student': student,
+        'classes': classes,
+        'student_classes': student_classes,
+        'remaining_amount': remaining_amount,
+    }
+
+    return render(request, 'Register/update.html', context)
+
 #
 # def list_basiji(request):
 #     if request.user.is_authenticated:
