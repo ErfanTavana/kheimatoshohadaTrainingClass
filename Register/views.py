@@ -7,17 +7,24 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login
 import jdatetime
 
+from django.shortcuts import render
+from .models import Student, Class
+from django.db.models import Sum, Avg
+from django.shortcuts import render
+from .models import Student, Class
+from django.db.models import Sum, Avg
+
 
 def jalali_to_gregorian(jalali_date_str):
-
     year, month, day = map(int, jalali_date_str.split('/'))
     jalali_date = jdatetime.date(year, month, day)
     gregorian_date = jalali_date.togregorian()
     return gregorian_date.strftime('%Y-%m-%d')
 
+
 def register_class(request):
     if not request.user.is_authenticated:
-        pass
+        return redirect('login')
     if request.method == 'GET':
         classes = Class.objects.all()
         return render(request, 'Register/register.html', context={"classes": classes})
@@ -69,6 +76,8 @@ def register_class(request):
 
 
 def update_view(request, student_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
     student = get_object_or_404(Student, id=student_id)
 
     if request.method == 'POST':
@@ -111,115 +120,52 @@ def update_view(request, student_id):
 
     return render(request, 'Register/update.html', context)
 
-#
-# def list_basiji(request):
-#     if request.user.is_authenticated:
-#         kol_age = 0
-#         cunt = 0
-#         Money = 0
-#         price = 0
-#         price_2 = 0
-#         registrations = RegisterForSummerClasses.objects.all()
-#         if registrations.count() == 0:
-#             return render(request, 'basiji/list.html', {'registrations': registrations.order_by("-id")})
-#         for user in registrations:
-#             kol_age += user.age
-#             cunt += 1
-#             Money += user.payment_amount
-#             price += user.price
-#             price_2 += user.price_2
-#         Average = kol_age / cunt
-#         Average = int(Average)
-#
-#         return render(request, 'basiji/list.html',
-#                       {'registrations': registrations.order_by("-id"), "Average": Average, "Money": Money,
-#                        "price": price,
-#                        "price_2": price_2})
-#     else:
-#         return redirect("login")
-#
-#
-# def update_user(request, id):
-#     if request.user.is_authenticated:
-#         if request.method == "POST":
-#             name = request.POST.get('name')
-#             last_name = request.POST.get('last_name')
-#             if len(name) < 2 and len(last_name) < 2:
-#                 return render(request, 'basiji/register.html')
-#             else:
-#                 father_name = request.POST.get("father_name")
-#                 national_code = request.POST.get("national_code")
-#                 birthdate = request.POST.get("birthdate")
-#                 jalali_date_list = birthdate.split("/")
-#                 j_year, j_month, j_day = map(int, jalali_date_list)
-#                 miladi_date = JalaliDate(j_year, j_month, j_day).to_gregorian().strftime("%Y-%m-%d")
-#                 payment_amount = request.POST.get("payment_amount")
-#                 phone_number = request.POST.get("phone_number")
-#                 Urdu = request.POST.get("Urdu") is not None
-#                 consent_letter = request.POST.get("consent_letter") is not None
-#                 photoshop = request.POST.get("photoshop") is not None
-#                 python = request.POST.get("python") is not None
-#                 futsal = request.POST.get("futsal") is not None
-#                 swim = request.POST.get("swim") is not None
-#                 self_defense = request.POST.get("self_defense") is not None
-#                 shooting = request.POST.get("shooting") is not None
-#                 relief_and_rescue = request.POST.get("relief_and_rescue") is not None
-#                 biology = request.POST.get("biology") is not None
-#                 photography = request.POST.get("photography") is not None
-#                 military_tactics = request.POST.get("military_tactics") is not None
-#                 rhetorical = request.POST.get("rhetorical") is not None
-#                 robotic = request.POST.get("robotic") is not None
-#                 math = request.POST.get("math") is not None
-#                 quran = request.POST.get("quran") is not None
-#                 english = request.POST.get("english") is not None
-#                 arabic = request.POST.get("arabic") is not None
-#                 try:
-#                     print(id)
-#                     registration = RegisterForSummerClasses.objects.get(id=id)
-#                     registration.name = name
-#                     registration.last_name = last_name
-#                     registration.father_name = father_name
-#                     registration.national_code = national_code
-#                     registration.birthdate = miladi_date
-#                     registration.payment_amount = payment_amount
-#                     registration.phone_number = phone_number
-#                     registration.Urdu = Urdu
-#                     registration.consent_letter = consent_letter
-#                     registration.photoshop = photoshop
-#                     registration.python = python
-#                     registration.futsal = futsal
-#                     registration.swim = swim
-#                     registration.self_defense = self_defense
-#                     registration.shooting = shooting
-#                     registration.relief_and_rescue = relief_and_rescue
-#                     registration.biology = biology
-#                     registration.photography = photography
-#                     registration.military_tactics = military_tactics
-#                     registration.rhetorical = rhetorical
-#                     registration.robotic = robotic
-#                     registration.math = math
-#                     registration.quran = quran
-#                     registration.english = english
-#                     registration.arabic = arabic
-#                     registration.save()
-#                 except RegisterForSummerClasses.DoesNotExist:
-#                     registration = RegisterForSummerClasses(name=name, last_name=last_name, father_name=father_name,
-#                                                             national_code=national_code, birthdate=miladi_date,
-#                                                             payment_amount=payment_amount, phone_number=phone_number,
-#                                                             Urdu=Urdu,consent_letter=consent_letter,photoshop=photoshop, python=python, futsal=futsal,
-#                                                             swim=swim,
-#                                                             self_defense=self_defense, shooting=shooting,
-#                                                             relief_and_rescue=relief_and_rescue, biology=biology,
-#                                                             photography=photography, military_tactics=military_tactics,
-#                                                             rhetorical=rhetorical, robotic=robotic, math=math,
-#                                                             quran=quran, english=english, arabic=arabic)
-#                     registration.save()
-#         print('+++')
-#         user = RegisterForSummerClasses.objects.get(id=id)
-#         return render(request, 'basiji/update.html', {"user": user})
-#     else:
-#         return redirect("login")
-#
+
+from django.db.models import Avg, F, ExpressionWrapper, IntegerField
+from django.shortcuts import render, redirect
+from django.db.models import Sum
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from .models import Student, Class
+
+def list_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    students = Student.objects.all()
+    classes = Class.objects.all()
+
+    name_search = request.GET.get('name_search')
+    last_name_search = request.GET.get('last_name_search')
+    class_ids = request.GET.getlist('classes')
+
+    if name_search:
+        students = students.filter(first_name__icontains=name_search)
+    if last_name_search:
+        students = students.filter(last_name__icontains=last_name_search)
+    if class_ids:
+        students = students.filter(classes__id__in=class_ids)
+
+    total_cost = students.aggregate(total_payment=Sum('payment_amount'))['total_payment'] or 0
+    total_class_cost = classes.aggregate(total_cost=Sum('class_cost'))['total_cost'] or 0
+    remaining_amount = total_class_cost - total_cost
+
+    # محاسبه سن میانگین به صورت دستی
+    now = datetime.now()
+    ages = [relativedelta(now, student.birth_date).years for student in students]
+    average_age = sum(ages) / len(ages) if ages else 0
+
+    context = {
+        'students': students,
+        'classes': classes,
+        'Money': total_cost,
+        'price': total_class_cost,
+        'price_2': remaining_amount,
+        'Average': average_age,
+    }
+
+    return render(request, 'Register/list.html', context)
+
 #
 # def list_basiji_search(request):
 #     if request.user.is_authenticated:
@@ -267,8 +213,8 @@ def update_view(request, student_id):
 #
 #
 def user_login(request):
-    if request.user.is_authenticated == True:
-        return redirect("register_class_name")
+    if request.user.is_authenticated:
+        return redirect("list")
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
