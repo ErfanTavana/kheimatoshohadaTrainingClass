@@ -51,7 +51,8 @@
         <img class="khomeini" src="{% static 'img/emam2.png' %}">
         <img class="agha" src="{% static 'img/agha1.png' %}">
         <img class="logo_h" src="{% static 'img/logo_h.png' %}" onclick="redirectToPage('{% url 'list' %}')">
-        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}" onclick="redirectToPage('{% url 'register_class_name' %}')">
+        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}"
+             onclick="redirectToPage('{% url 'register_class_name' %}')">
     </div>
 </header>
 <br>
@@ -62,12 +63,15 @@
         <label for="name_search">نام: </label>
         <input autocomplete="off" id="name_search" name="name_search" value="{{ request.GET.name_search }}">
         <label for="last_name_search">نام خانوادگی: </label>
-        <input autocomplete="off" id="last_name_search" name="last_name_search" value="{{ request.GET.last_name_search }}">
+        <input autocomplete="off" id="last_name_search" name="last_name_search"
+               value="{{ request.GET.last_name_search }}">
         <br>
         <label for="classes">انتخاب کلاس : </label>
         <select id="classes" class="form-control" name="classes">
+            <option value="">لیست کامل</option>
             {% for class in classes %}
-                <option value="{{ class.id }}" {% if class.id|stringformat:"s" in request.GET.classes %}selected{% endif %}>{{ class.class_name }}</option>
+                <option value="{{ class.id }}"
+                        {% if class.id|stringformat:"s" in request.GET.classes %}selected{% endif %}>{{ class.class_name }}</option>
             {% endfor %}
         </select>
         <div class="btn-sub-search">
@@ -88,22 +92,22 @@
             <th>مبلغ پرداخت شده : {{ Money }}</th>
             <th>جمع هزینه کلاس ها: {{ price }} </th>
             <th>مبلغ قابل پرداخت : {{ price_2 }} </th>
-            <th>میانگین سنی : {{ Average }} تعداد : {{ students.count }}</th>
+            <th>میانگین سنی : {{ Average }} تعداد : {{ students_data|length }}</th>
         </tr>
         </thead>
         <tbody>
-        {% for student in students %}
+        {% for data in students_data %}
             <tr>
-                <td>{{ student.first_name }}</td>
-                <td>{{ student.last_name }}</td>
-                <td>{{ student.national_code }}</td>
-                <td>{{ student.age }}</td>
-                <td>{{ student.contact_number }}</td>
-                <td>{{ student.payment_amount }}</td>
-                <td>{{ student.total_class_cost }}</td>
-                <td>{{ student.remaining_amount }}</td>
+                <td>{{ data.student.first_name }}</td>
+                <td>{{ data.student.last_name }}</td>
+                <td>{{ data.student.national_code }}</td>
+                <td>{{ data.student.age }}</td>
+                <td>{{ data.student.contact_number }}</td>
+                <td>{{ data.student.payment_amount }}</td>
+                <td>{{ data.total_class_cost }}</td>
+                <td>{{ data.remaining_amount }}</td>
                 <td>
-                    <a href="{% url 'update_name' student.id %}" class="btn-test">ویرایش</a>
+                    <a href="{% url 'update_name' data.student.id %}" class="btn-test">ویرایش</a>
                 </td>
             </tr>
         {% endfor %}

@@ -25,9 +25,11 @@ def jalali_to_gregorian(jalali_date_str):
 def register_class(request):
     if not request.user.is_authenticated:
         return redirect('login')
+
     if request.method == 'GET':
         classes = Class.objects.all()
         return render(request, 'Register/register.html', context={"classes": classes})
+
     if request.method == 'POST':
         # گرفتن داده‌های فرم
         first_name = request.POST.get('first_name')
@@ -35,8 +37,10 @@ def register_class(request):
         father_name = request.POST.get('father_name')
         national_code = request.POST.get('national_code')
         birth_date = request.POST.get('birth_date')
-        birth_date = jalali_to_gregorian(birth_date)
-
+        if birth_date:
+            birth_date = jalali_to_gregorian(birth_date)
+        else:
+            birth_date = '2006-03-11'
         payment_amount = request.POST.get('payment_amount')
         contact_number = request.POST.get('contact_number')
 
@@ -44,10 +48,22 @@ def register_class(request):
         class_ids = request.POST.getlist('classes')
         classes = Class.objects.all()
 
-        # اعتبارسنجی داده‌ها (اختیاری)
+        # اعتبارسنجی داده‌ها
         if not first_name or not last_name or not national_code or not birth_date:
             return render(request, 'Register/register.html',
-                          context={'classes': classes, 'error': 'لطفا فیلد های ضروری را تکمیل کنید'})
+                          context={
+                              'classes': classes,
+                              'first_name': first_name,
+                              'last_name': last_name,
+                              'father_name': father_name,
+                              'national_code': national_code,
+                              'birth_date': birth_date,
+                              'payment_amount': payment_amount,
+                              'contact_number': contact_number,
+                              'classes_ids': class_ids,
+                              'error': 'لطفا فیلد های ضروری را تکمیل کنید'
+                          })
+
         try:
             # ایجاد یک دانش‌آموز جدید
             student = Student.objects.create(
@@ -62,18 +78,39 @@ def register_class(request):
             )
 
             # اضافه کردن کلاس‌های انتخاب شده به دانش‌آموز
-            classes = Class.objects.filter(id__in=class_ids)
-            student.classes.set(classes)
+            selected_classes = Class.objects.filter(id__in=class_ids)
+            student.classes.set(selected_classes)
 
             return redirect('update_name', student_id=student.id)
         except ValueError as e:
             return render(request, 'Register/register.html',
-                          context={'classes': classes, 'error': f'{str(e)}'})
+                          context={
+                              'classes': classes,
+                              'first_name': first_name,
+                              'last_name': last_name,
+                              'father_name': father_name,
+                              'national_code': national_code,
+                              'birth_date': birth_date,
+                              'payment_amount': payment_amount,
+                              'contact_number': contact_number,
+                              'classes_ids': class_ids,
+                              'error': f'{str(e)}'
+                          })
         except Exception as e:
             print(e)
             return render(request, 'Register/register.html',
-                          context={'classes': classes, 'error': 'خطا در ثبت نام لطفا دوباره تلاش کنید'})
-
+                          context={
+                              'classes': classes,
+                              'first_name': first_name,
+                              'last_name': last_name,
+                              'father_name': father_name,
+                              'national_code': national_code,
+                              'birth_date': birth_date,
+                              'payment_amount': payment_amount,
+                              'contact_number': contact_number,
+                              'classes_ids': class_ids,
+                              'error': 'خطا در ثبت نام لطفا دوباره تلاش کنید'
+                          })
 
 def update_view(request, student_id):
     if not request.user.is_authenticated:
@@ -127,6 +164,11 @@ from django.db.models import Sum
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from .models import Student, Class
+from django.db.models import Sum
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from .models import Student, Class
+
 
 def list_view(request):
     if not request.user.is_authenticated:
@@ -137,34 +179,43 @@ def list_view(request):
 
     name_search = request.GET.get('name_search')
     last_name_search = request.GET.get('last_name_search')
-    class_ids = request.GET.getlist('classes')
+    class_ids = request.GET.get('classes')  # باید به صورت لیست دریافت شود
 
     if name_search:
         students = students.filter(first_name__icontains=name_search)
     if last_name_search:
         students = students.filter(last_name__icontains=last_name_search)
     if class_ids:
-        students = students.filter(classes__id__in=class_ids)
+        # برای فیلتر کردن بر اساس کلاس‌ها
+        students = students.filter(classes__id__in=class_ids).distinct()
 
-    total_cost = students.aggregate(total_payment=Sum('payment_amount'))['total_payment'] or 0
-    total_class_cost = classes.aggregate(total_cost=Sum('class_cost'))['total_cost'] or 0
-    remaining_amount = total_class_cost - total_cost
+    # محاسبه هزینه کلاس‌ها و مبلغ قابل پرداخت برای هر کاربر
+    student_data = []
+    for student in students:
+        total_class_cost = student.classes.aggregate(total_cost=Sum('class_cost'))['total_cost'] or 0
+        remaining_amount = total_class_cost - student.payment_amount
+        student_data.append({
+            'student': student,
+            'total_class_cost': total_class_cost,
+            'remaining_amount': remaining_amount
+        })
 
-    # محاسبه سن میانگین به صورت دستی
+    # محاسبه میانگین سنی
     now = datetime.now()
-    ages = [relativedelta(now, student.birth_date).years for student in students]
+    ages = [student.age for student in students]  # استفاده از property age
     average_age = sum(ages) / len(ages) if ages else 0
 
     context = {
-        'students': students,
+        'students_data': student_data,
         'classes': classes,
-        'Money': total_cost,
-        'price': total_class_cost,
-        'price_2': remaining_amount,
+        'Money': sum(data['student'].payment_amount for data in student_data),
+        'price': sum(data['total_class_cost'] for data in student_data),
+        'price_2': sum(data['remaining_amount'] for data in student_data),
         'Average': average_age,
     }
 
     return render(request, 'Register/list.html', context)
+
 
 #
 # def list_basiji_search(request):
