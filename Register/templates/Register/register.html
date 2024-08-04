@@ -28,26 +28,6 @@
                     }
                 }
             });
-            $("#registration-form").submit(function (event) {
-                event.preventDefault();
-                // ارسال فرم با استفاده از AJAX
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'register_class_name' %}",
-                    data: $(this).serialize(),
-                    success: function () {
-                        // نمایش الارم ذخیره شد
-                        var name = $("#name").val();
-                        var lastName = $("#last_name").val();
-                        alert("نام: " + name + "\nنام خانوادگی: " + lastName);
-                        // پاک کردن فرم
-                        $("#registration-form")[0].reset();
-                        // انتقال به صفحه اپدیت
-                        window.location.href = "/update/{{ user.id }}";  // جایگزین کردن user.id با شناسه کاربر مورد نظر
-                    }
-                });
-            });
-
         });
     </script>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -61,6 +41,11 @@
         .form_register input[type="text"] {
             width: 200px;
             margin-bottom: 5px;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -80,25 +65,24 @@
 
 <div class="form_register">
     <div class="form_kadr">
-        <form id="registration-form" method="post">
+        <form id="registration-form" method="post" action="{% url 'register_class_name' %}">
             {% csrf_token %}
             <!-- نمایش پیام خطا -->
             {% if error %}
                 <div class="error-message" id="error-message">{{ error }}</div>
             {% endif %}
-                <label for="name">نام : </label>
-                <input autocomplete="off" id="name" type="text" name="first_name"><br>
-                <label for="last_name">نام خانوادگی : </label>
-                <input autocomplete="off" id="last_name"  type="text" name="last_name"><br>
-                <label for="father_name">نام پدر : </label>
-                <input autocomplete="off" id="father_name" type="text" name="father_name"><br>
-                <label for="national_code">کد ملی : </label>
-                <input autocomplete="off" id="national_code" type="text" name="national_code"><br>
-                <label for="birth_date">تاریخ تولد : </label>
-            <input autocomplete="off" type="text" class="form-control" name="birthdate"
-                   id="birth_date"><br>
-                <label for="payment_amount">پرداخت شده : </label>
-                <input autocomplete="off" id="payment_amount" type="text" name="payment_amount"><br>
+            <label for="name">نام : </label>
+            <input autocomplete="off" id="name" type="text" name="first_name"><br>
+            <label for="last_name">نام خانوادگی : </label>
+            <input autocomplete="off" id="last_name"  type="text" name="last_name"><br>
+            <label for="father_name">نام پدر : </label>
+            <input autocomplete="off" id="father_name" type="text" name="father_name"><br>
+            <label for="national_code">کد ملی : </label>
+            <input autocomplete="off" id="national_code" type="text" name="national_code"><br>
+            <label for="birth_date">تاریخ تولد : </label>
+            <input autocomplete="off" type="text" class="form-control" name="birthdate" id="birth_date"><br>
+            <label for="payment_amount">پرداخت شده : </label>
+            <input autocomplete="off" id="payment_amount" type="text" name="payment_amount"><br>
             <label for="contact_number">تلفن تماس : </label>
             <input autocomplete="off" id="contact_number" type="text" name="contact_number"><br>
 
@@ -110,7 +94,6 @@
             </div>
             <br>
             <button style="margin-right: 165px" class="btn-test" type="submit">ثبت نام</button>
-
         </form>
     </div>
 </div>

@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" style="">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="utf-8">
     <title>ویرایش</title>
@@ -13,7 +13,6 @@
             window.location.href = url;
         }
     </script>
-
     <script>
         $(document).ready(function () {
             $("#birth_date").persianDatepicker({
@@ -28,31 +27,10 @@
                     }
                 }
             });
-
-            $("#registration-form").submit(function (event) {
-                event.preventDefault();
-                // ارسال فرم با استفاده از AJAX
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'update' user.id %}",
-                    data: $(this).serialize(),
-                    success: function () {
-                        // نمایش الارم ذخیره شد
-                        // نمایش نام و نام خانوادگی در الرت
-                        var name = $("#name").val();
-                        var lastName = $("#last_name").val();
-                        alert("نام: " + name + "\nنام خانوادگی: " + lastName);
-                        // پاک کردن فرم
-                        $("#registration-form")[0].reset();
-                        // رفرش کردن صفحه
-                        location.reload();
-                    }
-                });
-            });
         });
     </script>
 
-    <link rel="stylesheet" href="{% static "css/main.css" %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <style>
         .form_register label {
             display: inline-block;
@@ -69,74 +47,39 @@
 <body>
 <header>
     <div class="div-blue">
-        <!-- کادر ابی بالا -->
+        <!-- کادر آبی بالا -->
         <img class="khomeini" src="{% static 'img/emam2.png' %}">
         <img class="agha" src="{% static 'img/agha1.png' %}">
-        <img class="logo_h" src="{% static 'img/logo_h.png' %}" onclick="redirectToPage('{% url 'list' %}')">
-        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}"
-             onclick="redirectToPage('{% url 'register' %}')">
+        <img class="logo_h" src="{% static 'img/logo_h.png' %}" onclick="redirectToPage('{% url 'register_class_name' %}')">
+        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}" onclick="redirectToPage('{% url 'register_class_name' %}')">
     </div>
 </header>
-<br>
-<br>
+<br><br>
 
 <div class="form_register">
     <div class="form_kadr">
-        <form id="registration-form" method="post">
+        <form id="registration-form" method="post" action="{% url 'update_name' student.id %}">
             {% csrf_token %}
 
-            <label for="name">نام : </label>
-            <input autocomplete="off" id="name" type="text" value="{{ user.name }}" name="name">
-            <span style="color: red;"> مبلغ قابل پرداخت : {{ user.price_2 }}</span><br>
+            <label for="first_name">نام : </label>
+            <input autocomplete="off" id="first_name" type="text" value="{{ student.first_name }}" name="first_name"><br>
             <label for="last_name">نام خانوادگی : </label>
-            <input autocomplete="off" id="last_name" type="text" value="{{ user.last_name }}" name="last_name"><br>
+            <input autocomplete="off" id="last_name" type="text" value="{{ student.last_name }}" name="last_name"><br>
             <label for="father_name">نام پدر : </label>
-            <input autocomplete="off" id="father_name" type="text" value="{{ user.father_name }}"
-                   name="father_name"><br>
+            <input autocomplete="off" id="father_name" type="text" value="{{ student.father_name }}" name="father_name"><br>
             <label for="national_code">کد ملی : </label>
-            <input autocomplete="off" id="national_code" type="text" value="{{ user.national_code }}"
-                   name="national_code"><br>
+            <input autocomplete="off" id="national_code" type="text" value="{{ student.national_code }}" name="national_code"><br>
             <label for="birth_date">تاریخ تولد : </label>
-            <input autocomplete="off" type="text" class="form-control" value="{{ user.birthdate }}" name="birthdate"
-                   id="birth_date"><br>
-            <label for="payment_amount"> پرداخت شده : </label>
-            <input autocomplete="off" id="payment_amount" type="text" value="{{ user.payment_amount }}"
-                   name="payment_amount"><br>
-            <label for="phone_number">تلفن تماس : </label>
-            <input autocomplete="off" id="phone_number" type="text" value="{{ user.phone_number }}" name="phone_number"><br>
+            <input autocomplete="off" type="text" class="form-control" value="{{ student.birth_date }}" name="birth_date" id="birth_date"><br>
+            <label for="payment_amount">پرداخت شده : </label>
+            <input autocomplete="off" id="payment_amount" type="text" value="{{ student.payment_amount }}" name="payment_amount"><br>
+            <label for="contact_number">تلفن تماس : </label>
+            <input autocomplete="off" id="contact_number" type="text" value="{{ student.contact_number }}" name="contact_number"><br>
             <hr>
             <div id="class_list" class="checkbox-list">
-                <label><input type="checkbox" name="Urdu" value="اردو" {% if user.Urdu %}checked{% endif %}>اردو</label>
-                <label><input type="checkbox" name="consent_letter" value="رضایت نامه" {% if user.consent_letter %}checked{% endif %}>رضایت نامه</label>
-                <label><input type="checkbox" name="photoshop" value="فتوشاپ" {% if user.photoshop %}checked{% endif %}>فتوشاپ</label>
-                <label><input type="checkbox" name="python" value="پایتون" {% if user.python %}checked{% endif %}>پایتون</label>
-                <label><input type="checkbox" name="futsal" value="فوتسال" {% if user.futsal %}checked{% endif %}>فوتسال</label>
-                <label><input type="checkbox" name="swim" value="شنا" {% if user.swim %}checked{% endif %}>شنا</label>
-                <br>
-                <label><input type="checkbox" name="self_defense" value="دفاع شخصی"
-                              {% if user.self_defense %}checked{% endif %}>دفاع شخصی</label>
-                <label><input type="checkbox" name="shooting" value="تیر اندازی"
-                              {% if user.shooting %}checked{% endif %}>تیر اندازی</label>
-                <label><input type="checkbox" name="relief_and_rescue" value="امداد و نجات"
-                              {% if user.relief_and_rescue %}checked{% endif %}>امداد و نجات</label>
-                <label><input type="checkbox" name="biology" value="زیست شناسی" {% if user.biology %}checked{% endif %}>زیست
-                    شناسی</label>
-                <br>
-                <label><input type="checkbox" name="photography" value="عکاسی"
-                              {% if user.photography %}checked{% endif %}>عکاسی</label>
-                <label><input type="checkbox" name="military_tactics" value="تاکتیک نظامی"
-                              {% if user.military_tactics %}checked{% endif %}>تاکتیک نظامی</label>
-                <label><input type="checkbox" name="rhetorical" value="فن بیان"
-                              {% if user.rhetorical %}checked{% endif %}>فن بیان</label>
-                <label><input type="checkbox" name="robotic" value="رباتیک" {% if user.robotic %}checked{% endif %}>رباتیک</label>
-                <br>
-                <label><input type="checkbox" name="math" value="ریاضی"
-                              {% if user.math %}checked{% endif %}>ریاضی</label>
-                <label><input type="checkbox" name="quran" value="قرآن"
-                              {% if user.quran %}checked{% endif %}>قرآن</label>
-                <label><input type="checkbox" name="english" value="انگلیسی" {% if user.english %}checked{% endif %}>انگلیسی</label>
-                <label><input type="checkbox" name="arabic" value="عربی"
-                              {% if user.arabic %}checked{% endif %}>عربی</label>
+                {% for class in classes %}
+                    <label><input type="checkbox" name="classes" value="{{ class.id }}" {% if class.id in student_classes %}checked{% endif %}>{{ class.class_name }}</label><br>
+                {% endfor %}
             </div>
             <br>
             <button style="margin-right: 165px" class="btn-test" type="submit">ویرایش</button>

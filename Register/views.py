@@ -3,14 +3,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Student
 from .models import User, Class
+from django.shortcuts import render, get_object_or_404, redirect
 
 
 def register_class(request):
-    if not  request.user.is_authenticated:
+    if not request.user.is_authenticated:
         pass
     if request.method == 'GET':
         classes = Class.objects.all()
-        return render(request, 'Register/register.html',context={"classes":classes})
+        return render(request, 'Register/register.html', context={"classes": classes})
     if request.method == 'POST':
         # گرفتن داده‌های فرم
         first_name = request.POST.get('first_name')
@@ -53,45 +54,37 @@ def register_class(request):
             return render(request, 'Register/register.html',
                           context={'classes': classes, 'error': f'{str(e)}'})
         except Exception as e:
+            print(e)
             return render(request, 'Register/register.html',
                           context={'classes': classes, 'error': 'خطا در ثبت نام لطفا دوباره تلاش کنید'})
 
 
-def update_view(request, user_id):
-    user = get_object_or_404(User, id=user_id)
+def update_view(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
     if request.method == 'POST':
-        user.name = request.POST.get('name')
-        user.last_name = request.POST.get('last_name')
-        user.father_name = request.POST.get('father_name')
-        user.national_code = request.POST.get('national_code')
-        user.birthdate = request.POST.get('birthdate')
-        user.payment_amount = request.POST.get('payment_amount')
-        user.phone_number = request.POST.get('phone_number')
-        user.Urdu = 'Urdu' in request.POST
-        user.consent_letter = 'consent_letter' in request.POST
-        user.photoshop = 'photoshop' in request.POST
-        user.python = 'python' in request.POST
-        user.futsal = 'futsal' in request.POST
-        user.swim = 'swim' in request.POST
-        user.self_defense = 'self_defense' in request.POST
-        user.shooting = 'shooting' in request.POST
-        user.relief_and_rescue = 'relief_and_rescue' in request.POST
-        user.biology = 'biology' in request.POST
-        user.photography = 'photography' in request.POST
-        user.military_tactics = 'military_tactics' in request.POST
-        user.rhetorical = 'rhetorical' in request.POST
-        user.robotic = 'robotic' in request.POST
-        user.math = 'math' in request.POST
-        user.quran = 'quran' in request.POST
-        user.english = 'english' in request.POST
-        user.arabic = 'arabic' in request.POST
-        user.save()
+        student.first_name = request.POST.get('first_name')
+        student.last_name = request.POST.get('last_name')
+        student.father_name = request.POST.get('father_name')
+        student.national_code = request.POST.get('national_code')
 
-        return JsonResponse({'message': 'اطلاعات با موفقیت به‌روزرسانی شد'})
+        # Convert birth_date to YYYY-MM-DD format
+        birth_date_str = request.POST.get('birth_date')
+        birth_date = '2024-08-03'
+        student.birth_date = birth_date
+
+        student.payment_amount = request.POST.get('payment_amount')
+        student.contact_number = request.POST.get('contact_number')
+
+        class_ids = request.POST.getlist('classes')
+        student.classes.set(Class.objects.filter(id__in=class_ids))
+
+        student.save()
+        return redirect('update_name', student_id=student.id)
 
     classes = Class.objects.all()
-    return render(request, 'Register/update.html', {'user': user, 'classes': classes})
-#
+    student_classes = student.classes.values_list('id', flat=True)
+    return render(request, 'Register/update.html',
+                  {'student': student, 'classes': classes, 'student_classes': student_classes})
 #
 # def list_basiji(request):
 #     if request.user.is_authenticated:
