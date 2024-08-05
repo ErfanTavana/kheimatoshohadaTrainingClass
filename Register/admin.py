@@ -3,13 +3,13 @@ from .models import Student
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'father_name', 'national_code', 'birth_date', 'payment_amount', 'contact_number')
+    list_display = ('first_name', 'last_name', 'father_name', 'national_code', 'birth_date', 'payment_amount', 'contact_number','is_deleted')
     search_fields = ('first_name', 'last_name', 'national_code')
     filter_horizontal = ('classes',)  # اضافه کردن یک فیلد چند انتخابی برای کلاس‌ها
 
     fieldsets = (
         (None, {
-            'fields': ('user', 'first_name', 'last_name', 'father_name', 'national_code', 'birth_date', 'payment_amount', 'contact_number')
+            'fields': ('user', 'first_name', 'last_name', 'father_name', 'national_code', 'birth_date', 'payment_amount', 'contact_number','is_deleted')
         }),
         ('Classes', {
             'fields': ('classes',),

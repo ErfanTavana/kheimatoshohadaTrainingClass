@@ -272,7 +272,6 @@ button[type="submit"]:hover {
 
 .btn-test {
     transition: all 1s;
-
 }
 
 .btn-test:link, .btn-test:visited {

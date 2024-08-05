@@ -29,6 +29,19 @@
                 }
             });
         });
+
+        function deleteStudent() {
+            if (confirm("آیا مطمئن هستید که می‌خواهید این دانش‌آموز را حذف کنید؟")) {
+                $.ajax({
+                    url: '{% url "update_name" student.id %}',
+                    type: 'DELETE',
+                    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                    success: function (result) {
+                        window.location.href = '{% url "list" %}';  // یا هر مسیر دیگری که لیست دانش‌آموزان را نمایش می‌دهد
+                    }
+                });
+            }
+        }
     </script>
 
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -115,8 +128,28 @@
                 </div>
             {% endif %}
             <br>
-            <button style="margin-right: 165px" class="btn-test" type="submit">ویرایش</button>
+            <div style="display: flex;justify-content: space-between;gap:0.5rem">
+                <button style="" class="btn-test" type="submit">ویرایش</button>
+                <button class="btn-delete" onclick="deleteStudent()" style="
+    transition: all 1s;
+    border: 2px solid #dc3545; /* تغییر به قرمز */
+    background-color: white;
+    color: #dc3545; /* تغییر به قرمز */
+    text-decoration: none;
+    padding: 4px 8px;
+    box-sizing: border-box;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    font-size: 16px; /* تنظیم سایز فونت */
+"
+                        onmouseover="this.style.backgroundColor='#dc3545';this.style.color='#ffffff';this.style.borderTopRightRadius='0px';this.style.borderBottomLeftRadius='0px';this.style.borderTopLeftRadius='20px';this.style.borderBottomRightRadius='20px';"
+                        onmouseout="this.style.backgroundColor='white';this.style.color='#dc3545';this.style.borderTopRightRadius='20px';this.style.borderBottomLeftRadius='20px';this.style.borderTopLeftRadius='0px';this.style.borderBottomRightRadius='0px';">
+                    حذف
+                </button>
+            </div>
+
         </form>
+
     </div>
 </div>
 </body>

@@ -27,7 +27,7 @@ def register_class(request):
         return redirect('login')
 
     if request.method == 'GET':
-        classes = Class.objects.all()
+        classes = Class.objects.filter()
         return render(request, 'Register/register.html', context={"classes": classes})
 
     if request.method == 'POST':
@@ -112,10 +112,18 @@ def register_class(request):
                               'error': 'خطا در ثبت نام لطفا دوباره تلاش کنید'
                           })
 
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Student, Class
+
+
 def update_view(request, student_id):
     if not request.user.is_authenticated:
         return redirect('login')
-    student = get_object_or_404(Student, id=student_id)
+    student = get_object_or_404(Student, id=student_id, is_deleted=False)
+    if request.method == 'DELETE':
+        student.delete()
+        return redirect('list')  # یا هر مسیری که لیست دانش‌آموزان را نمایش می‌دهد
 
     if request.method == 'POST':
         student.first_name = request.POST.get('first_name')
@@ -174,7 +182,7 @@ def list_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    students = Student.objects.all()
+    students = Student.objects.filter(is_deleted=False)
     classes = Class.objects.all()
 
     name_search = request.GET.get('name_search')
@@ -275,10 +283,4 @@ def user_login(request):
             return redirect('register_class_name')
         else:
             return render(request, "Register/login.html", context={"eroor": 'نام كاربري يا رمز عبور اشتباه است'})
-    # f = RegisterForSummerClasses.objects.all()
-    # for i in f :
-    #     print(i.national_code)
-    #     i.quran = True
-    #     i.quran = False
-    #     i.save()
     return render(request, "Register/login.html")
