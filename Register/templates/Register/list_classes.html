@@ -1,12 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
     <meta charset="utf-8">
-    <title>لیست کلاس ها</title>
+    <title>لیست کلاس‌ها</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-
     <script>
         function redirectToPage(url) {
             window.location.href = url;
@@ -14,7 +12,7 @@
 
         function deleteClass(classId) {
             if (confirm('آیا مطمئن هستید که می‌خواهید این کلاس را حذف کنید؟')) {
-                fetch(`/update/${classId}/`, {
+                fetch(`/update_class/${classId}/`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRFToken': '{{ csrf_token }}',
@@ -28,16 +26,11 @@
                         } else {
                             alert('خطا در حذف کلاس');
                         }
-                    })
-                    .catch(error => {
-                        console.error('خطا:', error);
                     });
             }
         }
     </script>
-
 </head>
-
 <body id="bala">
 <header>
     <div class="div-blue">
@@ -55,25 +48,12 @@
 <br>
 <br>
 <div class="serceh_list">
-    <form method="get" action="{% url 'list' %}">
+    <form method="get" action="{% url 'list_classes_view_name' %}">
         {% csrf_token %}
-        <label for="name_search">نام: </label>
-        <input autocomplete="off" id="name_search" name="name_search" value="{{ request.GET.name_search }}">
-        <label for="last_name_search">نام خانوادگی: </label>
-        <input autocomplete="off" id="last_name_search" name="last_name_search"
-               value="{{ request.GET.last_name_search }}">
-        <br>
-        <label for="classes">انتخاب کلاس : </label>
-        <select id="classes" class="form-control" name="classes">
-            <option value="">لیست کامل</option>
-            {% for class in classes %}
-                <option value="{{ class.id }}"
-                        {% if class.id|stringformat:"s" in request.GET.classes %}selected{% endif %}>{{ class.class_name }}</option>
-            {% endfor %}
-        </select>
-        <div class="btn-sub-search">
-            <button style="transition: all 1s; margin-top: 10px;" type="submit">جستجو</button>
-        </div>
+        <label for="class_name_search">نام کلاس: </label>
+        <input autocomplete="off" id="class_name_search" name="class_name_search"
+               value="{{ request.GET.class_name_search }}">
+        <button style="transition: all 1s; margin-top: 10px;" type="submit">جستجو</button>
     </form>
 </div>
 
@@ -81,30 +61,34 @@
     <table class="table-container">
         <thead class="hd_fix">
         <tr>
-            <th>نام</th>
-            <th>نام خانوادگی</th>
-            <th>کد ملی</th>
-            <th>سن</th>
-            <th>شماره تلفن</th>
-            <th>مبلغ پرداخت شده : {{ Money }}</th>
-            <th>جمع هزینه کلاس ها: {{ price }} </th>
-            <th>مبلغ قابل پرداخت : {{ price_2 }} </th>
-            <th>میانگین سنی : {{ Average }} تعداد : {{ students_data|length }}</th>
+            <th>نام کلاس</th>
+            <th>هزینه کلاس</th>
+            <th>عملیات</th>
         </tr>
         </thead>
         <tbody>
-        {% for data in students_data %}
+        {% for class in classes %}
             <tr>
-                <td>{{ data.student.first_name }}</td>
-                <td>{{ data.student.last_name }}</td>
-                <td>{{ data.student.national_code }}</td>
-                <td>{{ data.student.age }}</td>
-                <td>{{ data.student.contact_number }}</td>
-                <td>{{ data.student.payment_amount }}</td>
-                <td>{{ data.total_class_cost }}</td>
-                <td>{{ data.remaining_amount }}</td>
+                <td>{{ class.class_name }}</td>
+                <td>{{ class.class_cost }} تومان</td>
                 <td>
-                    <a href="{% url 'update_name' data.student.id %}" class="btn-test">ویرایش</a>
+                    <a href="{% url 'update_class_view_name' class.id %}" class="btn-test">ویرایش</a>
+                    <button class="btn-delete" onclick="deleteClass({{ class.id }})" style="
+    transition: all 1s;
+    border: 2px solid #dc3545; /* تغییر به قرمز */
+    background-color: white;
+    color: #dc3545; /* تغییر به قرمز */
+    text-decoration: none;
+    padding: 4px 8px;
+    box-sizing: border-box;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    font-size: 16px; /* تنظیم سایز فونت */
+"
+                            onmouseover="this.style.backgroundColor='#dc3545';this.style.color='#ffffff';this.style.borderTopRightRadius='0px';this.style.borderBottomLeftRadius='0px';this.style.borderTopLeftRadius='20px';this.style.borderBottomRightRadius='20px';"
+                            onmouseout="this.style.backgroundColor='white';this.style.color='#dc3545';this.style.borderTopRightRadius='20px';this.style.borderBottomLeftRadius='20px';this.style.borderTopLeftRadius='0px';this.style.borderBottomRightRadius='0px';">
+                        حذف
+                    </button>
                 </td>
             </tr>
         {% endfor %}

@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>ویرایش کلاس</title>
+    <script>
+        function redirectToPage(url) {
+            window.location.href = url;
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+<header>
+    <div class="div-blue">
+        <!-- کادر آبی بالا -->
+        <img class="khomeini" src="{% static 'img/emam2.png' %}"
+             onclick="redirectToPage('{% url 'list_classes_view_name' %}')">
+        <img class="agha" src="{% static 'img/agha1.png' %}"
+             onclick="redirectToPage('{% url 'create_class_view_name' %}')">
+        <img class="logo_h" src="{% static 'img/logo_h.png' %}"
+             onclick="redirectToPage('{% url 'list' %}')">
+        <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}"
+             onclick="redirectToPage('{% url 'register_class_name' %}')">
+    </div>
+</header>
+<br><br>
+<div class="form_login">
+    <div class="eroor"><p>{{ eroor }}</p></div>
+    <div class="log">
+        <form class="log" id="update-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="class_id" value="{{ classe.id }}">
+            <label for="class_name">نام کلاس: </label>
+            <input style="text-align: center; direction: ltr" id="class_name" autocomplete="off" type="text" name="class_name" value="{{ classe.class_name }}">
+            <br>
+            <label for="class_cost">هزینه کلاس: </label>
+            <input style="text-align: center; direction: ltr" id="class_cost" autocomplete="off" type="text" name="class_cost" value="{{ classe.class_cost }}">
+            <br>
+            <hr>
+            <button style="margin-right: 78px" type="submit">به‌روزرسانی کلاس</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

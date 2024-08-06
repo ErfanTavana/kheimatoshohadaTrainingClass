@@ -67,8 +67,10 @@
 <header>
     <div class="div-blue">
         <!-- کادر آبی بالا -->
-        <img class="khomeini" src="{% static 'img/emam2.png' %}">
-        <img class="agha" src="{% static 'img/agha1.png' %}">
+        <img class="khomeini" src="{% static 'img/emam2.png' %}"
+             onclick="redirectToPage('{% url 'list_classes_view_name' %}')">
+        <img class="agha" src="{% static 'img/agha1.png' %}"
+             onclick="redirectToPage('{% url 'create_class_view_name' %}')">
         <img class="logo_h" src="{% static 'img/logo_h.png' %}"
              onclick="redirectToPage('{% url 'list' %}')">
         <img class="masjed_logo" src="{% static 'img/masjed_logo.png' %}"

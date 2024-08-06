@@ -4,6 +4,7 @@ from django.db import models
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='students', blank=True, null=True)
     first_name = models.CharField(max_length=50, verbose_name="نام")
@@ -32,9 +33,19 @@ class Student(models.Model):
         self.is_deleted = False
         self.save()
 
+
 class Class(models.Model):
     class_name = models.CharField(max_length=100, verbose_name="نام کلاس")
     class_cost = models.IntegerField(blank=True, null=True, default=0, verbose_name="هزینه کلاس")
+    is_deleted = models.BooleanField(default=False, verbose_name="حذف شده")
+
+    def delete(self):
+        self.is_deleted = True
+        self.save()
+
+    def restore(self):
+        self.is_deleted = False
+        self.save()
 
     def __str__(self):
         return self.class_name

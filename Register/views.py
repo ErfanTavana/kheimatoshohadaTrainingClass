@@ -284,3 +284,58 @@ def user_login(request):
         else:
             return render(request, "Register/login.html", context={"eroor": 'نام كاربري يا رمز عبور اشتباه است'})
     return render(request, "Register/login.html")
+
+
+from django.shortcuts import render, redirect
+from .models import Class
+
+
+def create_class_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'GET':
+        return render(request, 'Register/class_create.html')
+    elif request.method == 'POST':
+        class_name = request.POST.get('class_name')
+        class_cost = request.POST.get('class_cost')
+
+        # ایجاد کلاس جدید
+        new_class = Class(class_name=class_name, class_cost=class_cost)
+        new_class.save()
+
+        return redirect('list_classes_view_name')
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Class
+
+
+def update_class_view(request, class_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    classe = get_object_or_404(Class, id=class_id)
+
+    if request.method == 'GET':
+        return render(request, 'Register/class_update.html', {'classe': classe})
+
+    elif request.method == 'POST':
+        class_name = request.POST.get('class_name')
+        class_cost = request.POST.get('class_cost')
+        classe.class_name = class_name
+        classe.class_cost = class_cost
+        classe.save()
+        return redirect('list_classes_view_name')
+
+    if request.method == 'DELETE':
+        # حذف نرم‌افزاری
+        classe.is_deleted = True
+        classe.save()
+        return JsonResponse({'success': True})
+
+
+def list_classes_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    search_query = request.GET.get('class_name_search', '')
+    classes = Class.objects.filter(class_name__icontains=search_query, is_deleted=False)
+    return render(request, 'Register/list_classes.html', {'classes': classes})
