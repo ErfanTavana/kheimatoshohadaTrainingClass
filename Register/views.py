@@ -211,7 +211,7 @@ def list_view(request):
     # محاسبه میانگین سنی
     now = datetime.now()
     ages = [student.age for student in students]  # استفاده از property age
-    average_age = sum(ages) / len(ages) if ages else 0
+    average_age = sum(ages) // len(ages) if ages else 0
 
     context = {
         'students_data': student_data,
